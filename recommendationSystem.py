@@ -1,3 +1,6 @@
+# Importing the required libraries
+from surprise import Reader, Dataset
+from surprise import SVD, accuracy, SVDpp, SlopeOne, BaselineOnly, CoClustering
 import datetime
 import requests, zipfile, io
 from os import path
@@ -7,6 +10,7 @@ from numpy import *
 from sklearn.model_selection import train_test_split
 import time
 
+# Reading the data
 rating_data = {}
 movie_data = {}
 training_data = []
@@ -14,11 +18,11 @@ testing_data = []
 mapping_data = []
 unique_user_id = []
 
-# download http://files.grouplens.org/datasets/movielens/ml-latest.zip with 27M records File
+# download http://files.grouplens.org/datasets/movielens/ml-latest-small.zip with 1M records File
 # all files should be placed inside ml-latest folder
-if not path.exists('ml-latest'):
+if not path.exists('ml-latest-small'):
     print("Downloading Files for first time use: ")
-    download_file = requests.get('http://files.grouplens.org/datasets/movielens/ml-latest.zip')
+    download_file = requests.get('http://files.grouplens.org/datasets/movielens/ml-latest-small.zip')
     zipped_file = zipfile.ZipFile(io.BytesIO(download_file.content)) # having First.csv zipped file.
     zipped_file.extractall()
 
@@ -35,7 +39,7 @@ def load_mapping_data():
         "genres": str
     }
     cols = list(df_dtype.keys())
-    for df_chunk in tqdm.tqdm(pd.read_csv('ml-latest/movies.csv', usecols=cols, dtype=df_dtype, chunksize=chunk_size)):
+    for df_chunk in tqdm.tqdm(pd.read_csv('ml-latest-small/movies.csv', usecols=cols, dtype=df_dtype, chunksize=chunk_size)):
         df_chunk.shape[0]
         combine_data = [list(a) for a in
                         zip(df_chunk["movieId"].tolist(), df_chunk["title"].tolist(),
@@ -63,7 +67,7 @@ def load_data():
         "timestamp": int,
     }
     cols = list(df_dtype.keys())
-    for df_chunk in tqdm.tqdm(pd.read_csv('ml-latest/ratings.csv', usecols=cols, dtype=df_dtype, chunksize=chunk_size)):
+    for df_chunk in tqdm.tqdm(pd.read_csv('ml-latest-small/ratings.csv', usecols=cols, dtype=df_dtype, chunksize=chunk_size)):
         user_id = df_chunk["userId"].tolist()
         unique_user_id.extend(set(user_id))
         movie_id = df_chunk["movieId"].tolist()
@@ -76,7 +80,7 @@ def load_data():
             else:
                 rating_data[a[0]] = [[a[0], a[1], a[2], a[3]]]
     del df_chunk
-
+    return(rating_data)
 
 # Split the data into training and testing
 # this processes isn't being done for the whole dataset instead it's being done
@@ -97,16 +101,39 @@ def spilt_data():
     total = t1 - t0
     print(int(total))
 
-
 def get_movie_title(movie_id):
     if movie_id in movie_data.keys():
         return movie_data[movie_id][0]
-
 
 def get_movie_genre(movie_id):
     if movie_id in movie_data.keys():
         return movie_data[movie_id][1]
 
+def convert_traintest_dataframe_forsurprise(training_dataframe, testing_dataframe):
+    training_dataframe = training_dataframe.iloc[:, :-1]
+    testing_dataframe = testing_dataframe.iloc[:, :-1]
+    reader = Reader(rating_scale=(0,5))
+    trainset = Dataset.load_from_df(training_dataframe[['userId', 'movieId', 'rating']], reader)
+    testset = Dataset.load_from_df(testing_dataframe[['userId', 'movieId', 'rating']], reader)
+    trainset = trainset.construct_trainset(trainset.raw_ratings)
+    testset=testset.construct_testset(testset.raw_ratings)
+    return([trainset,testset])
+
+def svdalgorithm(trainset, testset):
+    algo = SVD()
+    algo.fit(trainset)
+    print("Predictions")
+    predictions = algo.test(testset)
+    accuracy.rmse(predictions)
+    accuracy.mae(predictions)
+
+def baseline(trainset, testset):
+    algo = BaselineOnly()
+    algo.fit(trainset)
+    print("Predictions")
+    predictions = algo.test(testset)
+    accuracy.rmse(predictions)
+    accuracy.mae(predictions)
 
 if __name__ == "__main__":
     print("Data Loading and Processing, Estimated Time 2 minutes :")
@@ -119,3 +146,14 @@ if __name__ == "__main__":
     print(get_movie_title(1))
     print("Movie genre with id = 1 :")
     print(get_movie_genre(1))
+    training_dataframe=pd.DataFrame.from_records(training_data)
+    training_dataframe.columns=["userId","movieId","rating","timestamp"]
+    testing_dataframe=pd.DataFrame.from_records(testing_data)
+    testing_dataframe.columns=["userId","movieId","rating","timestamp"]
+    trainset,testset=convert_traintest_dataframe_forsurprise(training_dataframe, testing_dataframe)
+    print("Baseline algorithm using surprise package")
+    baseline(trainset, testset)
+    print("SVD algorithm using surprise package")
+    svdalgorithm(trainset,testset)
+
+
