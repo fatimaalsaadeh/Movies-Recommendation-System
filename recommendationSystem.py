@@ -154,7 +154,7 @@ def movie_recommendation(predictions, n=10):
     for user_id, user_ratings in recommendations_for_each_user.items():
         user_ratings.sort(key=lambda x: x[1], reverse=True)
         # Filtering the values to top n
-        recommendations_for_each_user[uid] = user_ratings[:n]
+        recommendations_for_each_user[user_id] = user_ratings[:n]
     return(recommendations_for_each_user)
 
 def baseline(trainset, testset):
