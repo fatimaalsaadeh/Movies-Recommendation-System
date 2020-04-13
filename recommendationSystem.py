@@ -20,7 +20,6 @@ Original file is located at
 """
 
 # Installing the required packages
-pip install surprise
 
 # Importing the required libraries
 from surprise import Reader, Dataset
