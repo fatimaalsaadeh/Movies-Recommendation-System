@@ -145,7 +145,7 @@ def similarity(weighted_sim, users, seq, common_items, item_ratings):
 
 	return similarity_list
 
-def predict(similarity_list, K, ratings, item_ratings, u, i):
+def predict(u, i, similarity_list, K, ratings, item_ratings):
 	r_hat = np.mean(ratings[u]) 
 	top_k = sorted(similarity_list[u], key = lambda x:x[1], reverse=True)[:K]
 
@@ -154,7 +154,7 @@ def predict(similarity_list, K, ratings, item_ratings, u, i):
 	for t in top_k:
 		v = t[0]
 		sim = t[1]
-		
+
 		# if user v has rated item i
 		if(i in item_ratings[v]):
 			num += sim * (item_ratings[v][i] - np.mean(ratings[v]))
@@ -189,6 +189,8 @@ if __name__ == "__main__":
 	similarity_list = similarity(weighted_sim, users, seq, common_items, item_ratings)
 
 	print("Prediction")
-	r = predict(similarity_list, 1, ratings, item_ratings, 1, 1)
+	user = 1
+	item = 1
+	r = predict(user, item, similarity_list, K = 1, ratings, item_ratings)
 	print(r)
 
