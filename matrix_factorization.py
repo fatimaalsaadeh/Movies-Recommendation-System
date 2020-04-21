@@ -81,7 +81,7 @@ def kNNBasic(trainset, testset):
 	print("\n" + "-" *5 + " KNNBasic algorithm using surprise package " + "-" *5)
 	sim_options = {
 					'name': 'MSD',      # MSD similarity measure gives the best result
-				  #  'user_based': True  # compute  similarities between users: MAE = 0.7744112391896695
+				   # 'user_based': True  # compute  similarities between users: MAE = 0.7744112391896695
 				   'user_based': False  # compute  similarities between items: MAE = 0.7685376263051
 				   }
 	algo = KNNBasic(sim_options = sim_options)
@@ -91,30 +91,6 @@ def kNNBasic(trainset, testset):
 	accuracy.rmse(predictions)
 	accuracy.mae(predictions)
 	return predictions
-
-def hybrid(trainset, testset):
-	prediction_baseline = baseline(trainset, testset)
-	predictions_svd = svdpp(trainset, testset)
-
-	baseline_estimate = []
-	actual_ratings = []
-	svd_estimate = []
-
-	for p in prediction_baseline:
-		baseline_estimate.append(p[3])
-		actual_ratings.append(p[2])
-
-	for p in predictions_svd:
-		svd_estimate.append(p[3])
-
-	hybrid_estimate = np.multiply(baseline_estimate, 0.2) + np.multiply(svd_estimate, 0.8)
-	# rmse, mae = compute_error(actual_ratings, hybrid_estimate)
-
-	# print("\n" + "-" *5 + " Hybrid algorithm " + "-" *5)
-	# print("RMSE: ", rmse)
-	# print("MAE: ", mae)
-
-	return hybrid_estimate
 
 def movie_recommendation(predictions, n=10):
 	# First map the predictions to each user.
@@ -172,6 +148,35 @@ def precision_recall_calculation(predictions, threshold=3.5):
 	
 	return [average_precision, average_recall, F_score]
 
+def hybrid(trainset, testset):
+	prediction_baseline = baseline(trainset, testset)
+	predictions_svd = svdpp(trainset, testset)
+
+	baseline_estimate = []
+	actual_ratings = []
+	svd_estimate = []
+
+	for p in prediction_baseline:
+		baseline_estimate.append(p[3])
+		actual_ratings.append(p[2])
+
+	for p in predictions_svd:
+		svd_estimate.append(p[3])
+
+	hybrid_estimate = np.multiply(baseline_estimate, 0.2) + np.multiply(svd_estimate, 0.8)
+	rmse, mae = compute_error(actual_ratings, hybrid_estimate)
+
+	print("\n" + "-" *5 + " Hybrid algorithm " + "-" *5)
+	print("RMSE: ", rmse)
+	print("MAE: ", mae)
+
+	hybrid_estimate = hybrid_estimate.tolist()
+	predictions = []
+	for p,h in zip(prediction_baseline, hybrid_estimate):
+		predictions.append((p[0], p[1], p[2], h, p[4]))
+
+	return predictions
+
 if __name__ == "__main__":
 
 	df_train, df_test = data.get_train_test_data(new_sample = False)
@@ -179,14 +184,13 @@ if __name__ == "__main__":
 
 	# predictions = baseline(trainset, testset)
 	# predictions = svdalgorithm(trainset, testset)
-	
 	# predictions = slopeOne(trainset, testset)
 	# predictions = coClustering(trainset, testset)
 	# predictions = kNNBasic(trainset, testset)
-	predictions = svdpp(trainset, testset)
+	# predictions = svdpp(trainset, testset)
 
-	# predictions = hybrid(trainset, testset)
-	# rmse, mae = compute_error(actual_ratings, hybrid_estimate)
+	predictions = hybrid(trainset, testset)
+
 	algorithm_recommendations,testdata_recommendations = movie_recommendation(predictions, n=10)
 	# Print the recommended movies for each user
 	#for user_id, user_ratings in algorithm_recommendations.items():
