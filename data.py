@@ -1,5 +1,3 @@
-
-  
 # Importing the required libraries
 from surprise import Reader, Dataset
 from surprise import SVD, accuracy, SVDpp, SlopeOne, BaselineOnly, CoClustering
@@ -11,6 +9,7 @@ import tqdm as tqdm
 from numpy import *
 from sklearn.model_selection import train_test_split
 import time
+import pickle
 
 
 
@@ -107,14 +106,43 @@ def get_movie_genre(movie_id, movie_data):
 
 
 
-def get_train_test_data():
-    rating_data, unique_user_id = load_data()
-    training_data, testing_data = spilt_data(rating_data, unique_user_id)
-    training_dataframe = pd.DataFrame.from_records(training_data)
-    training_dataframe.columns = ["userId","movieId","rating","timestamp"]
-    testing_dataframe = pd.DataFrame.from_records(testing_data)
-    testing_dataframe.columns=["userId","movieId","rating","timestamp"]
-    # df_links = pd.read_csv('ml-latest-small/links.csv')
+# def get_train_test_data():
+#     rating_data, unique_user_id = load_data()
+#     training_data, testing_data = spilt_data(rating_data, unique_user_id)
+#     training_dataframe = pd.DataFrame.from_records(training_data)
+#     training_dataframe.columns = ["userId","movieId","rating","timestamp"]
+#     testing_dataframe = pd.DataFrame.from_records(testing_data)
+#     testing_dataframe.columns= ["userId","movieId","rating","timestamp"]
+    
+#     return training_dataframe, testing_dataframe
+
+def get_train_test_data(new_sample = False):
+    if new_sample:
+        rating_data, unique_user_id = load_data()
+        training_data, testing_data = spilt_data(rating_data, unique_user_id)
+        training_dataframe = pd.DataFrame.from_records(training_data)
+        training_dataframe.columns = ["userId","movieId","rating","timestamp"]
+        testing_dataframe = pd.DataFrame.from_records(testing_data)
+        testing_dataframe.columns=["userId","movieId","rating","timestamp"]
+        # df_links = pd.read_csv('ml-latest-small/links.csv')
+        file = open('training_dataframe.txt', 'wb')
+        pickle.dump(training_dataframe, file)
+        file.close()
+
+        file = open('testing_dataframe.txt', 'wb')
+        pickle.dump(testing_dataframe, file)
+        file.close()
+        
+
+    else:
+        file = open('training_dataframe.txt', 'rb')
+        training_dataframe = pickle.load(file)
+        file.close()
+
+        file = open('testing_dataframe.txt', 'rb')
+        testing_dataframe = pickle.load(file)
+        file.close()
+
     return training_dataframe, testing_dataframe
 
 
