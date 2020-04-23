@@ -9,12 +9,8 @@ import tqdm as tqdm
 from numpy import *
 from sklearn.model_selection import train_test_split
 import time
-<<<<<<< HEAD
 import pickle
-
-=======
 import matplotlib.pyplot as plt
->>>>>>> upstream/master
 
 
 # Loading the mapping data which is to map each movie Id
