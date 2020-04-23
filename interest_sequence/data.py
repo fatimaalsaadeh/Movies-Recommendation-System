@@ -10,8 +10,7 @@ from numpy import *
 from sklearn.model_selection import train_test_split
 import time
 import pickle
-import pickle
-import matplotlib.pyplot as plt
+
 
 
 # Loading the mapping data which is to map each movie Id
@@ -106,6 +105,17 @@ def get_movie_genre(movie_id, movie_data):
         return movie_data[movie_id][1]
 
 
+
+# def get_train_test_data():
+#     rating_data, unique_user_id = load_data()
+#     training_data, testing_data = spilt_data(rating_data, unique_user_id)
+#     training_dataframe = pd.DataFrame.from_records(training_data)
+#     training_dataframe.columns = ["userId","movieId","rating","timestamp"]
+#     testing_dataframe = pd.DataFrame.from_records(testing_data)
+#     testing_dataframe.columns= ["userId","movieId","rating","timestamp"]
+    
+#     return training_dataframe, testing_dataframe
+
 def get_train_test_data(new_sample = False):
     if new_sample:
         rating_data, unique_user_id = load_data()
@@ -122,6 +132,7 @@ def get_train_test_data(new_sample = False):
         file = open('testing_dataframe.txt', 'wb')
         pickle.dump(testing_dataframe, file)
         file.close()
+        
 
     else:
         file = open('training_dataframe.txt', 'rb')
@@ -133,6 +144,7 @@ def get_train_test_data(new_sample = False):
         file.close()
 
     return training_dataframe, testing_dataframe
+
 
 if __name__ == "__main__":
     # download http://files.grouplens.org/datasets/movielens/ml-latest-small.zip with 1M records File
