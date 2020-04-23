@@ -1,0 +1,126 @@
+\documentclass[sigconf]{acmart}
+\settopmatter{printacmref=false} % Removes citation information below abstract
+%\renewcommand\footnotetextcopyrightpermission[1]{} % removes footnote with conference information in first column
+\pagestyle{plain} % removes running headers
+\pagestyle{empty}
+
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{clrscode}
+\usepackage{balance}
+\usepackage{subfigure}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{color}
+\usepackage{soul}
+\usepackage{mdframed}
+\usepackage{amsopn}
+\usepackage{mathrsfs}
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{arydshln}
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{blkarray}
+\usepackage{enumerate}
+\usepackage{courier}
+\usepackage{rotating}
+\usepackage{booktabs}
+\usepackage{diagbox}
+\usepackage{fancybox}
+\usepackage{minibox}
+\usepackage{cases}
+\usepackage[lined,boxruled,commentsnumbered,linesnumbered]{algorithm2e}
+
+\newcommand{\ylcomment}[1]{\textcolor{blue}{[#1---yl]}}
+
+\DeclareRobustCommand{\hlblue}[1]{{\sethlcolor{blue}\hl{#1}}}
+\DeclareRobustCommand{\hlgreen}[1]{{\sethlcolor{green}\hl{#1}}}
+\DeclareRobustCommand{\hlred}[1]{{\sethlcolor{red}\hl{#1}}}
+
+\newcommand{\argmin}{\operatornamewithlimits{argmin}}
+\newcommand{\argmax}{\operatornamewithlimits{argmax}}
+\newcommand{\minimize}{\operatornamewithlimits{minimize}}
+\newcommand{\maximize}{\operatornamewithlimits{maximize}}
+\newcommand{\random}{\operatornamewithlimits{random}}
+\newcommand{\suchthat}{\operatornamewithlimits{s.t.}}
+\newcommand{\rank}{\operatornamewithlimits{rank}}
+\newcommand{\trace}{\operatorname{tr}}
+\newcommand{\vectorize}{\operatornamewithlimits{vec}}
+\newcommand{\diag}{\operatornamewithlimits{diag}}
+\newcommand{\bdf}{\operatornamewithlimits{bdf}}
+\newcommand{\bbdf}{\operatornamewithlimits{bbdf}}
+\newcommand{\rbbdf}{\operatornamewithlimits{rbbdf}}
+\newcommand{\hdline}{\hdashline[2pt/2pt]}
+\newcommand{\vdline}{\vdashline[2pt/2pt]}
+\newcommand{\vdl}{;{2pt/2pt}}
+\newcommand{\tabincell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
+
+%\setcopyright{rightsretained}
+%\acmDOI{10.475/123_4}
+%\acmISBN{123-4567-24-567/08/06}
+%\acmConference[SIGIR'19]{}{}{July 21-25, 2019, Paris, France}
+%\acmYear{2018}
+%\copyrightyear{2018}
+%\acmPrice{15.00}
+
+\begin{document}
+
+\title{Comparison of Recommendation System on Movie Lens Data}
+
+\author{Rushabh Bid, Fathima AlSaadeh, Keya Desai, Naveen Narayanan M}
+\affiliation{
+ \institution{Rutgers University}
+}
+\email{rhb86@scarletmail.rutgers.edu | fya7@scarletmail.rutgers.edu | kd706@scarletmail.rutgers.edu | nm941@scarletmail.rutgers.edu}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+Abstract.
+\end{abstract}
+
+\keywords{Keywords}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+Recommendation systems or engines are algorithms that are used to suggest relevant products to users. Nowadays, recommendation systems are used in a wide variety of applications and they provide personalized online product or service recommendation for users. They are used in the recommendation of products, services, movies, songs, restaurants, hotels, television programs and so on. Unlike a search engine, the recommendation engine tries to predict the rating or preference of the particular product for a given user. Over the last decade, more and more companies have started leveraging the use of a recommendation system for improving the user experience in shopping and also to sell new products for relevant users. Recommendation systems are not only useful for customers but are also used by companies to learn about customer desires, current market trends, retain customers, create brand loyalty and generate more revenue. Apart from these benefits, the data generated from the recommendation engines can be analyzed to take strategic and tactical decisions by the marketing/sales team of a company. In this project, our aim is to develop various movie recommendation system for the movie review data set taken from "https://grouplens.org/datasets/movielens/latest/" [1]. This data set describes a 5-star rating from MovieLens, a movie recommendation service.Like many other problems in data science, there are several ways to approach
+recommendations. Two of the most popular are collaborative filtering and content-based recommendations. In Collaborative Filtering,
+for each user, recommender systems recommend items based on how similar users liked the item. In Content-based recommendation,
+recommender systems work based on the detailed metadata about each item. We build an item profile for each item and based on this item profile, recommendations are provided. In this proect we trained and tested various recommendation models such as ............... All the above recommendation algorithms were developed using Python 3. 
+
+\section{Related Work}\label{sec:related}
+A brief review of the related work. (Here is an example of how to include citation \cite{koren2009matrix}).
+
+
+\section{Preliminaries}\label{sec:preliminary}
+The movie lens dataset was downloaded from the website "https://grouplens.org/datasets/movielens/latest/" [1] as a zipped file. The dataset consists for four csv files: "rating.csv", "tags.csv", "links.csv" and "movies.csv". Of these 4 files, the "rating.csv" file consists of the ratings of various users for differnt movies. There are about xxxx ratings, xxxx unique movies and xxxx unique users. The "movies.csv" is used to map the different movie ids with the movie title and its related genres. Figure (1) shows a snippet of our dataset. 
+\\The initial analysis of these data sets using python revealed interesting findings such as xxxxxxxx.  The data was was unzipped and read in the correct format as a data frame in python.Then for each user, we randomly selected 80\% of his/her ratings as the training ratings, and we used the remaining 20\% ratings for testing our recommendation system.
+
+\section{Problem Formalization}\label{sec:formal}
+Mathematically formalize your research problem.
+
+\section{The Proposed Model}\label{sec:framework}
+Introduce the proposed method to solve the problem.
+
+\section{Experiments}\label{sec:experiments}
+Introduce the experimental results.
+
+\section{Conclusions and Future Work}\label{sec:conclusions}
+Conclude the work and make discussions about future directions.
+
+\section*{Acknowledgement}
+Acknowledges for the help you received such as useful discussions with colleagues.
+
+\bibliographystyle{ACM-Reference-Format}
+\balance
+\bibliography{paper}
+
+\end{document}
+
+
+
+
+
+
